@@ -1,133 +1,81 @@
-// import { useState } from 'react';
-
-// const App = () => {
-
-//   const [check, setCheck] = useState(false);
-//   const [change, setChange] = useState("");
-//   const [toDo, setToDo] = useState([]);
-
-//   const crossed = 'line-through'
-
-//   const handleAdd = (e) => {
-//     e.preventDefault();
-//     setCheck(false);
-//     let activity = {name: change, completed: check};
-//     setToDo([...toDo, activity]);
-//   }
-
-//   const handleSelect = (e, i) => {
-//     setCheck(e.target.checked);
-//     toDo[i].completed = e.target.checked;
-//   }
-
-//   const handleDelete = (e, i) => {
-//     setToDo(toDo.filter((_,ind)=> i != ind));
-//     setCheck(toDo[i].completed)
-//   }
-//   return (
-//     <>
-//       <section className="container-fluid">
-//         <div className="row">
-//           <div className="col-6 border rounded shadow container-fluid">
-//             <input type="text" placeholder="Add activity here..." onChange={e => setChange(e.target.value)} className="my-2 form-control" />
-//             <button className="btn btn-success w-100" onClick={e => handleAdd(e)}>Add</button>
-//           </div>
-//           <div className="col-6 container-fluid">
-//             <table className="table border">
-//               <thead>
-//                 <tr>
-//                   <td>Activity</td>
-//                   <td>Completed</td>
-//                   <td>Delete</td>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {toDo.map((val, i)=> (
-//                   <tr key={i}>
-//                     <td style={{textDecoration: val.completed == true ? crossed : 'none'}}>{val.name}</td>
-//                     <td><input type="checkbox" name={val.name} onChange={(e)=> handleSelect(e, i)}/> </td>
-//                     <td><button className="btn btn-warning" onClick={e => handleDelete(e, i)}>Delete</button></td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       </section>
-//     </>
-//   )
-// }
-
-// export default App;
-
-
-import { useState } from 'react';
-import image from './icons8_Ok.ico'
+import { useState } from 'react'
 
 const App = () => {
-  const [activity, setActivity] = useState("");
-  const [complete, setComplete] = useState(false);
-  const crossed = 'line-through';
-  const [todo, setTodo] = useState([]);
 
-  const handleActivity = (e) => {
-    e.preventDefault();
-    setComplete(false)
-    let newTodo = {name: activity, completed: complete};
-    setTodo([...todo, newTodo]);
-    setActivity("");
+  const [name, setName] = useState("");
+  const [completed, setCompleted] = useState(false);
+  const [activities, setActivities] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [editNum, setEditNum] = useState('');
+
+  const handleActivity = () => {
+    setCompleted(false)
+    let newActivity = {name, completed};
+    setActivities([...activities, newActivity]);
+    setName("");
   }
 
-  const handleComplete = (e, i) => {
-    let changeTodo = todo;
-    let completed
-    if (complete == true) {
-      completed = false;
-      setComplete(completed);
-    } else {
-      completed = true;
-      setComplete(completed);
-    }
-    changeTodo[i].completed = completed;
-    setTodo(changeTodo);
+  const handleComplete = (i) => {
+    let update = [...activities];
+    update[i].completed = !update[i].completed;
+    setCompleted(!update[i].completed);
+    setActivities(update);
   }
 
-  const handleDelete = (e, i) => {
-    setTodo(todo.filter((_, ind)=> i != ind));
+  const handleEdit = i => {
+    setName(activities[i].name);
+    setEditMode(true);
+    setEditNum(i);
+  }
+
+  const updateChanges = () => {
+    let edit = [...activities];
+    edit[editNum].name = name;
+    setActivities(edit);
+    setName("")
+    setEditMode(false)
+  }
+
+  const handleDelete = i => {
+    setActivities(activities.filter((_, ind)=> i != ind))
   }
 
   return(
     <>
-       <section className="container-fluid">
-         <div className="row">
-           <div className="col-6 border rounded shadow container-fluid">
-             <input type="text" placeholder="Add activity here..." onChange={e => setActivity(e.target.value)} value={activity} className="my-2 form-control" />
-             <button className="btn btn-success w-100" onClick={e => handleActivity(e)}>Add</button>
-           </div>
-           <div className="col-6 container-fluid">
-             <table className="table border">
-               <thead>
-                 <tr>
-                   <td>S/N</td>
-                   <td>Activity</td>
-                   <td>Status</td>
-                   <td>Delete</td>
-                 </tr>
-               </thead>
-               <tbody>
-                 {todo.map((val, i)=> (
-                   <tr key={i}>
-                     <td>{i+1}</td>
-                     <td style={{textDecoration: val.completed == true ? crossed : 'none'}}>{val.name}</td>
-                     <td><img alt="Complete" src={image} onClick={(e)=> handleComplete(e, i)}/> </td>
-                     <td><button className="btn btn-warning" onClick={e => handleDelete(e, i)}>Delete</button></td>
-                   </tr>
-                 ))}
-               </tbody>
-             </table>
-           </div>
-         </div>
-       </section>
+      <section className="container-fluid mt-3">
+        <div className="row">
+          <div className="col-6 container-fluid">
+            <input type="text" placeholder="Add activity here..." onChange={e => setName(e.target.value)} value={name} className="form-control my-3" />
+            {!editMode ? 
+            <button className="btn btn-success w-100" onClick={handleActivity} >Add Activity</button>
+            :
+            <button className="btn btn-success w-100" onClick={updateChanges}>Update Activity</button>
+            }
+          </div>
+          <div className="col-6 container-fluid">
+            <table className="table table-striped table-border">
+              <thead className="border">
+                <tr className="border">
+                  <td className="border">S/N</td>
+                  <td className="border">Activity</td>
+                  <td className="border">Status</td>
+                  <td className="border">Actions</td>
+                </tr>
+              </thead>
+              <tbody className="border">
+                {activities.map((val, i)=> (
+                  <tr className="border" key={i}>
+                    <td className="border">{i+1}</td>
+                    <td className="border" style={{textDecoration: !val.completed ? "none" : "line-through"}} >{val.name}</td>
+                    <td className="border"> <button className="btn btn-success" onClick={() => handleComplete(i)}>Complete</button> </td>
+                    <td className="border"> <button className="btn btn-warning" onClick={ () => handleEdit(i)}>Edit</button> <button className="btn btn-danger" onClick={() => handleDelete(i)}>Delete</button> </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
