@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import completeImg from './assets/icons8_Ok.ico';
+import editImg from './assets/edit.ico';
+import deleteImg from './assets/delete.ico';
+import pinImg from './assets/pin.ico';
 
 const App = () => {
 
@@ -7,6 +11,9 @@ const App = () => {
   const [activities, setActivities] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editNum, setEditNum] = useState('');
+  const [color, setColor] = useState("pink");
+  // const [pending, setPending] = useState(0);
+
 
   const handleActivity = () => {
     setCompleted(false)
@@ -40,41 +47,63 @@ const App = () => {
     setActivities(activities.filter((_, ind)=> i != ind))
   }
 
+  // useEffect(() => {
+  //   return () => {
+  //     setPending(activities.filter((val,_)=> val.completed == false).length);
+  //   };
+  // });
+
+  const handlePin = i => {
+    let changeActivity = [...activities];
+    let p = changeActivity[i];
+    changeActivity.splice(i, 1);
+    changeActivity = [p, ...changeActivity];
+    setActivities(changeActivity);
+  }
+
   return(
     <>
-      <section className="container-fluid mt-3">
-        <div className="row">
+      <section className="container-fluid vh-100" style={{backgroundColor: color, color: "white"}}>
+        <h1 className="text-center mb-3">Todo App</h1>
+        {/* <div className="row"> */}
           <div className="col-6 container-fluid">
-            <input type="text" placeholder="Add activity here..." onChange={e => setName(e.target.value)} value={name} className="form-control my-3" />
+          <p className="text-center">Change color here</p>
+          <input type="color" className="form-control bg-transparent" onChange={e => setColor(e.target.value)} />
+            <input type="text" placeholder="Add activity here..." autoFocus onChange={e => setName(e.target.value)} value={name} className="form-control my-3" />
             {!editMode ? 
             <button className="btn btn-success w-100" onClick={handleActivity} >Add Activity</button>
             :
             <button className="btn btn-success w-100" onClick={updateChanges}>Update Activity</button>
             }
           </div>
-          <div className="col-6 container-fluid">
-            <table className="table table-striped table-border">
-              <thead className="border">
-                <tr className="border">
-                  <td className="border">S/N</td>
-                  <td className="border">Activity</td>
-                  <td className="border">Status</td>
-                  <td className="border">Actions</td>
+          <div className="col-6 container-fluid mt-4" style={{height: "60vh", overflowY: "scroll"}}>
+            <table className="table table-striped table-border shadow">
+              <thead>
+                <tr className="bg-secondary">
+                  <td>S/N</td>
+                  <td>Activity</td>
+                  <td>Status</td>
+                  <td>Actions</td>
                 </tr>
               </thead>
-              <tbody className="border">
+              <tbody>
                 {activities.map((val, i)=> (
-                  <tr className="border" key={i}>
-                    <td className="border">{i+1}</td>
-                    <td className="border" style={{textDecoration: !val.completed ? "none" : "line-through"}} >{val.name}</td>
-                    <td className="border"> <button className="btn btn-success" onClick={() => handleComplete(i)}>Complete</button> </td>
-                    <td className="border"> <button className="btn btn-warning" onClick={ () => handleEdit(i)}>Edit</button> <button className="btn btn-danger" onClick={() => handleDelete(i)}>Delete</button> </td>
+                  <tr key={i}>
+                    <td>{i+1}</td>
+                    <td style={{textDecoration: !val.completed ? "none" : "line-through"}} >{val.name}</td>
+                    <td> <img src={completeImg} alt="Complete" title="Complete" onClick={() => handleComplete(i)} className="pointer" /> </td>
+                    <td> <img src={editImg} alt="Edit" title="Edit" className="pointer" onClick={ () => handleEdit(i)} /> <img src={deleteImg} title="Delete" alt="Delete" className="mx-4  pointer" onClick={ () => handleDelete(i)} />  <img src={pinImg} alt="Pin" className="pointer" title="Pin" onClick={() => handlePin(i)} /> </td>
                   </tr>
                 ))}
               </tbody>
+              {/* <tfooter className="w-100">
+                <tr>
+                  <td>You have {pending} pending tasks</td>
+                </tr>
+              </tfooter> */}
             </table>
           </div>
-        </div>
+        {/* </div> */}
       </section>
     </>
   )
