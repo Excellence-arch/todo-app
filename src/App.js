@@ -123,8 +123,12 @@ const App = () => {
   const [editNum, setEditNum] = useState("");
 
   const handleAdd = () => {
-    let activity = {name, completed}
-    setAllActivities([...allActivities, activity]);
+    if (name) {
+      let activity = {name, completed}
+      setAllActivities([...allActivities, activity]);
+    } else {
+      alert("You must enter the activity name");
+    }
   }
 
   const completeTask = (i) => {

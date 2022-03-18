@@ -1,4 +1,8 @@
 import Button from "./Button";
+import completeImg from '../assets/icons8_Ok.ico';
+import editImg from '../assets/edit.ico';
+import deleteImg from '../assets/delete.ico';
+import pinImg from '../assets/pin.ico';
 
 const DisplayTodo = ({allActivities, completeTask, editTask, deleteTask}) => {
     return (
@@ -16,9 +20,9 @@ const DisplayTodo = ({allActivities, completeTask, editTask, deleteTask}) => {
                       <tr key={i}>
                           <td>{i+1}</td>
                           <td style={{textDecoration: val.completed ? "line-through" : "none"}}>{val.name}</td>
-                          <td> <Button name="Complete" handle={() => completeTask(i)} color="success" /> 
-                          <Button name="Edit" handle={() => editTask(i)} color="success" />
-                          <Button name="Delete" handle={() => deleteTask(i)} color="success" /> </td>
+                          <td> <img className="pointer" src={completeImg} alt="complete" title="Complete" onClick={() => completeTask(i)}/> 
+                          <img className="pointer mx-3" alt="edit" src={editImg} title="Edit" onClick={() => editTask(i)}/>
+                          <img className="pointer mx-3" src={deleteImg} alt="delete" title="Delete" onCLick={() => deleteTask(i)}/> </td>
                       </tr>
                   ))}
               </tbody>
