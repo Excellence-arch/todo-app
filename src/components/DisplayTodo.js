@@ -16,9 +16,9 @@ const DisplayTodo = ({allActivities, completeTask, editTask, deleteTask}) => {
                       <tr key={i}>
                           <td>{i+1}</td>
                           <td style={{textDecoration: val.completed ? "line-through" : "none"}}>{val.name}</td>
-                          <td> <Button name="Complete" handle={() => completeTask(i)} color="success" /> </td>
-                          <td> <Button name="Edit" handle={() => editTask(i)} color="success" /> </td>
-                          <td> <Button name="Delete" handle={() => deleteTask(i)} color="success" /> </td>
+                          <td> <Button name="Complete" handle={() => completeTask(i)} color="success" /> 
+                          <Button name="Edit" handle={() => editTask(i)} color="success" />
+                          <Button name="Delete" handle={() => deleteTask(i)} color="success" /> </td>
                       </tr>
                   ))}
               </tbody>

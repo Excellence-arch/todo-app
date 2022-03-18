@@ -117,12 +117,13 @@ import Form from "./components/Form";
 const App = () => {
 
   const [allActivities, setAllActivities] = useState([]);
+  const [name, setName] = useState("");
   const [completed, setCompleted] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [editNum, setEditNum] = useState("");
 
-  const handleAdd = (newActivity) => {
-    let activity = {name:newActivity, completed}
-    // console.log(activity);
+  const handleAdd = () => {
+    let activity = {name, completed}
     setAllActivities([...allActivities, activity]);
   }
 
@@ -136,9 +137,20 @@ const App = () => {
   const edit = (i) => {
     setName(allActivities[i].name);
     setEditMode(true);
-    // setEditNum(i);
-
+    setEditNum(i);
   }
+
+  const saveEdit = () => {
+    let updateActivity = [...allActivities];
+    updateActivity[editNum].name = name;
+    setAllActivities(updateActivity);
+    setName("")
+    setEditMode(false);
+  }
+
+  // const seeName = (change) => {
+  //   setName(change);
+  // }
 
   const deletes = (i) => {
     setAllActivities(allActivities.filter((_, ind) => i !== ind));
@@ -149,12 +161,17 @@ const App = () => {
     // console.log(nums);
   }
 
+  const clearName = () => {
+    handleAdd(name);
+    setName("");
+}
+
   return (
     <>
       <section className="container-fluid vh-100">
         <div className="column">
           <div className="col-6 container-fluid">
-            <Form  handleAdd={handleAdd} knowEdit={editMode} changeName={edit} />
+            <Form  name={name} knowEdit={editMode} clearName={clearName} seeName={(change) => setName(change)} changeName={saveEdit} />
           </div>
           <div className="col-6 container-fluid mt-4">
             <DisplayTodo completeTask={completeTask} editTask={edit} deleteTask={deletes} allActivities={allActivities}/>

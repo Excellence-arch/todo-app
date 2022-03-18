@@ -3,20 +3,19 @@ import { useState } from 'react';
 import Button from "./Button";
 
 
-const Form = ({handleAdd, knowEdit, changeName}) => {
+const Form = ({knowEdit, changeName, name, seeName, clearName}) => {
 
-    const [name, setName] = useState("");
+    // const [name, setName] = useState("");
 
-    const clearName = () => {
-        handleAdd(name);
-        setName("");
-    }
 
     return (
         <>
-            <Input placeholder="Set Activity here..." handleChange={e => setName(e.target.value)} val={name}/>
-            {/* <Input placeholder="Set Activity here..." handleChange={e => setName(e.target.value)} val={name}/> */}
-            <Button name={!knowEdit ? `Add Activity` : `Update Changes`} color="success" handle={clearName}/>
+            <Input placeholder="Set Activity here..." handleChange={e => seeName(e.target.value)} val={name}/>
+            {!knowEdit ? 
+            <Button name={`Add Activity`} color="success" handle={clearName}/>
+            :
+            <Button name={`Update Activity`} color="success" handle={changeName}/>
+            }
         </>
     )
 }
